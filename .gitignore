@@ -4,6 +4,7 @@ tmp/*
 # Dependency directories
 .git/
 # node_modules/
+node_modules/onnxruntime-node/*
 
 # data-single-auth
 session.data.json
