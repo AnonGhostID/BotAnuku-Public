@@ -1,7 +1,7 @@
 import { createSticker } from 'wa-sticker-formatter';
 import fs from 'fs';
 import fetch from 'node-fetch';
-import { apiData, apiData } from '../../api/apiKeys.js';
+import { apiData } from '../../api/apiKeys.js';
 
 let handler = async (m, { conn, args, text, usedPrefix, command }) => {
     let packname = "Bot Anuku";
