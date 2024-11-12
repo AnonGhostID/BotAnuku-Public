@@ -3,13 +3,13 @@ tmp/*
 
 # Dependency directories
 .git/
-# node_modules/
-node_modules/onnxruntime-node/*
+node_modules/
+
 
 # data-single-auth
 session.data.json
 database.json
-# package-lock.json
+package-lock.json
 
 #data-multi-auth
 eng.traineddata
