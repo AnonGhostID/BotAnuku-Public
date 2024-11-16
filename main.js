@@ -1,4 +1,4 @@
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1';
 process.on('uncaughtException', console.error)
 
 import './config.js'
@@ -31,26 +31,12 @@ const { say } = cfonts
 const { name, author } = require(join(__dirname, './package.json')) // https://www.stefanjudis.com/snippets/how-to-import-json-files-in-es-modules-node-js/
 //const { users, chats } = require(join(__dirname, './database.json'))
 
-const originalConsoleWarn = console.warn;
-
-console.warn = function (message, ...optionalParams) {
-    if (typeof message === 'string' && message.includes('could not send message again, as it was not found')) {
-        // Suppress this specific warning
-        return;
-    }
-    if (typeof message === 'object' && message.attrs && message.attrs.class === 'baileys' && message.attrs.id && message.attrs.phash) {
-        // Suppress this specific warning
-        return;
-    }
-    originalConsoleWarn.apply(console, [message, ...optionalParams]);
-};
-
-say('Bot-Anuku\nPublic WhatsApp Bot', {
+say('Lightweight\nWhatsApp Bot', {
 	font: 'chrome',
 	align: 'center',
 	gradient: ['red', 'magenta']
 })
-say(`'${name}' By AnonGhostID`, {
+say(`'${name}' By @${author.name || author}`, {
 	font: 'console',
 	align: 'center',
 	gradient: ['red', 'magenta']
@@ -119,20 +105,20 @@ bot.on('channel_post', async (ctx) => {
 		if (msg.caption_entities) {
 			msg.caption_entities.filter(v => v.url).forEach(v => { arr.push(v) })
 		}
-		arr = arr.filter(v => !v.url.includes('t.me')).map(z => z.url)
-		if (arr.length > 0 && !/\d\.\d\.\d(?=\s\(current\))/gi.test(txt)) txt += '\n\n*[hyperlink] :*\n- '+arr.join('\n- ')
+		arr = arr.filter(v => !v.url?.includes('t.me')).map(z => z.url)
+		if (arr.length > 0 && !/\d\.\d\.\d(?=\s\(current\))/gi.test(txt)) txt += '\n\n*[embedded link] :*\n- '+arr.join('\n- ')
 		if (msg.forward_origin) {
 			if (!y) {
 				let f = msg.forward_origin
 				let h = /hidden/.test(f.type)
 				txt = `❰ *${h ? f.sender_user_name : f.chat ? f.chat.title : f.sender_user.first_name}* ❱\n`
-				+ `- *${h ? 'hidden_user' : f.chat ? '@'+f.chat.username : '@'+(f.sender_user.username || 'hidden_user')}`
+				+ `- *${h ? 'hidden_user' : f.chat ? '@'+(f.chat.username || f.chat.type) : '@'+(f.sender_user.username || 'hidden_user')}`
 				+ `*${txt ? '\n\n'+txt : ''}`
 			} else txt = ''
 		}
+		let id = msg.photo ? msg.photo.pop().file_id : msg[obj[0]]?.file_id
 		do {
 			if (obj.length > 0) {
-				let id = msg.photo ? msg.photo.pop().file_id : msg[obj[0]].file_id
 				let url = await ctx.telegram.getFileLink(id)
 				let fileName = msg.document?.file_name || url.pathname.split('/').pop()
 				await conn.sendFile(x[i], url.href, fileName, txt, y ? null
